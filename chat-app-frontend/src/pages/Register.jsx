@@ -20,6 +20,9 @@ const Register = () => {
     theme: "dark",
   };
 
+  // navigate
+  const navigate = useNavigate()
+
   const [values,setValues] = useState({
     username:"",
     email:"",
@@ -31,16 +34,22 @@ const Register = () => {
 const handleSubmit = async (event) => {
  event.preventDefault();
  if(handleValidatation()){
-  const {password,confirmPassword,username,email} =  values;
+  const {password,username,email} =  values;
   const {data} = await axios.post(registerRoute,{
     username,
     email,
     password,
-  })
- }
- else{
+  });
+  if(data.status === false){
+    toast.error(data.msg,toastOptions)
+}
+if(data.status === true){
+         localStorage.setItem('chat-app-current-user',JSON.stringify(data.user))
+         navigate("/setAvatar")
 
+}
  }
+ 
 }
 
 const handleValidatation = () => {
